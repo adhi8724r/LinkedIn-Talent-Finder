@@ -1,4 +1,4 @@
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
 
 # 📝 Prompt template for structured extraction + scoring
 resume_parse_prompt = PromptTemplate(

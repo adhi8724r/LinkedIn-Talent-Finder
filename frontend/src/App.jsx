@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Hero from "./pages/hero.jsx";
 import LoginRegisterPage from "./pages/login.jsx";
 import ProtectedRoute from "./pages/ProtectedRoute.jsx";
@@ -8,14 +8,9 @@ import ProfilePage from "./pages/profilepage.jsx";
 import { AuthProvider } from "./pages/AuthContext.jsx";
 
 function App() {
-  const [msg, setMsg] = useState("");
-
   useEffect(() => {
     fetch("http://localhost:8000/")
       .then((res) => res.json())
-      .then((data) => {
-        setMsg(JSON.stringify(data.sample_user, null, 2));
-      })
       .catch((err) => console.error("Fetch error:", err));
   }, []);
 

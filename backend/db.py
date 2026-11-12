@@ -1,10 +1,14 @@
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import declarative_base, sessionmaker
 from config import settings
 
-engine = create_engine(settings.postgres_url)
-SessionLocal = sessionmaker(bind=engine)
+db_url = settings.postgres_url
+if db_url.startswith("postgresql://"):
+    db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
+
+connect_args = {"connect_timeout": 3} if "postgresql" in db_url else {}
+engine = create_engine(db_url, connect_args=connect_args)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 def get_db():

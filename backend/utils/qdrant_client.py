@@ -1,17 +1,23 @@
 from qdrant_client import QdrantClient
 from qdrant_client.http.models import Distance, VectorParams
-from config import settings  # assuming settings.embedding_dim is defined
+from config import settings
 
-client = QdrantClient(host="localhost", port=6333, timeout=30.0)
+client = QdrantClient(url=settings.qdrant_host, timeout=2.0, check_compatibility=False)
 
-COLLECTION_NAME = "resume_vectors"
+COLLECTION_NAME = settings.qdrant_collection
 
 def setup_qdrant():
-    if not client.collection_exists(COLLECTION_NAME):
-        client.create_collection(
-            collection_name=COLLECTION_NAME,
-            vectors_config=VectorParams(
-                size=settings.embedding_dim,  # e.g., 384
-                distance=Distance.COSINE,
+    try:
+        if not client.collection_exists(COLLECTION_NAME):
+            client.create_collection(
+                collection_name=COLLECTION_NAME,
+                vectors_config=VectorParams(
+                    size=settings.embedding_dim,
+                    distance=Distance.COSINE,
+                )
             )
-        )
+            print(f"✅ Qdrant collection '{COLLECTION_NAME}' created.")
+        else:
+            print(f"✅ Qdrant collection '{COLLECTION_NAME}' already exists.")
+    except Exception as e:
+        print(f"⚠️ Could not connect to Qdrant at {settings.qdrant_host}: {e}")

@@ -101,7 +101,7 @@ const LoginRegisterPage = () => {
             <p className="text-sm text-gray-500 mb-4">with your HR credentials</p>
             <input name="email" className="bg-gray-200 border-none p-3 my-2 w-full" type="email" placeholder="Email" />
             <input name="password" className="bg-gray-200 border-none p-3 my-2 w-full" type="password" placeholder="Password" />
-            <a href="#" className="text-sm my-3">Forgot your password?</a>
+            <button type="button" className="text-sm my-3 text-gray-500 hover:text-gray-700">Forgot your password?</button>
             <button type="submit" className="rounded-full border border-[#FF4B2B] bg-[#FF4B2B] text-white text-xs font-bold py-3 px-12 uppercase tracking-wider transition-transform duration-75 ease-in active:scale-95">
               Sign In
             </button>

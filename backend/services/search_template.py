@@ -1,4 +1,4 @@
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
 
 structured_ranking_prompt = PromptTemplate(
     input_variables=["job_description", "candidates", "format_instructions"],

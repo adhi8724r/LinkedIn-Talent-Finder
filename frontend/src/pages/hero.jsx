@@ -2,19 +2,17 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-  BriefcaseIcon,
-  DocumentTextIcon,
-  MagnifyingGlassIcon,
-  UserCircleIcon,
-  ChartBarIcon,
-} from "@heroicons/react/24/solid";
+  Briefcase,
+  FileText,
+  Search,
+  UserCircle,
+  BarChart3,
+} from "lucide-react";
 import { Link as ScrollLink } from "react-scroll";
 import AnimatedBrain from "../assets/AnimatedBrain";
 import GlassBackgroundLayout from "./GlassBackground";
 
 export default function Hero() {
-  const primaryColor = "#FF4B2B";
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -42,33 +40,33 @@ export default function Hero() {
     {
       title: "NLP Skill Extraction",
       desc: "Automatically identify key skills from job descriptions using AI.",
-      icon: <DocumentTextIcon className="h-6 w-6 text-blue-600" />,
+      icon: <FileText className="h-6 w-6 text-blue-600" />,
     },
     {
       title: "AI Candidate Ranking",
       desc: "Rank LinkedIn profiles using tailored algorithms based on fit score.",
-      icon: <ChartBarIcon className="h-6 w-6 text-purple-600" />,
+      icon: <BarChart3 className="h-6 w-6 text-purple-600" />,
     },
     {
       title: "Smart Export Tools",
       desc: "Export shortlists and manage hiring funnel effortlessly.",
-      icon: <BriefcaseIcon className="h-6 w-6 text-indigo-600" />,
+      icon: <Briefcase className="h-6 w-6 text-indigo-600" />,
     },
 
     {
       title: "Vast database Search",
       desc: "Search real-time candidates via API integration.",
-      icon: <MagnifyingGlassIcon className="h-6 w-6 text-purple-600" />,
+      icon: <Search className="h-6 w-6 text-purple-600" />,
     },
     {
       title: "Detailed Profile Previews",
       desc: "View enhanced candidate summaries with skill and experience highlights.",
-      icon: <UserCircleIcon className="h-6 w-6 text-indigo-600" />,
+      icon: <UserCircle className="h-6 w-6 text-indigo-600" />,
     },
     {
       title: "Intuitive Dashboard & Analytics",
       desc: "Filter, visualize, and analyze candidate pools from a centralized dashboard.",
-      icon: <ChartBarIcon className="h-6 w-6 text-emerald-500" />,
+      icon: <BarChart3 className="h-6 w-6 text-emerald-500" />,
     },
   ];
 
@@ -168,7 +166,7 @@ export default function Hero() {
                   to="/login"
                   className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-md hover:scale-105 flex items-center gap-2"
                 >
-                  <BriefcaseIcon className="h-5 w-5 text-white" />
+                  <Briefcase className="h-5 w-5 text-white" />
                   Start Hiring →
                 </Link>
                 <ScrollLink
