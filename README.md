@@ -15,34 +15,71 @@ LinkedIn-Talent-Finder/
 
 ### Prerequisites
 
-- Node.js (v18+)
-- Python (v3.9+)
-- Git
+- **Node.js**: v18+ or v20+ (with npm)
+- **Python**: v3.10+ / v3.11+
+- **Docker & Docker Compose**: For running PostgreSQL (`5433`) and Qdrant Vector DB (`6333`)
+- **Groq API Key**: For Meta Llama 3.3 70B semantic candidate scoring
+- **Git**: For version control
 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/LinkedIn-Talent-Finder.git
+git clone https://github.com/adhi8724r/LinkedIn-Talent-Finder.git
 cd LinkedIn-Talent-Finder
 ```
 
-### 2. Setup Frontend
+### 2. Setup Backend
+
+1. **Start Infrastructure Services (PostgreSQL & Qdrant)**:
+
+```bash
+docker compose up -d
+```
+
+2. **Configure Environment Variables**:
+
+Copy the example environment template:
+
+```bash
+cd backend
+cp .env.example .env    # On Windows PowerShell: copy .env.example .env
+```
+
+Set your local database credentials and Groq API key in `backend/.env`:
+
+```env
+postgres_url=postgresql://<DB_USERNAME>:<DB_PASSWORD>@localhost:5433/resume_db
+qdrant_host=http://localhost:6333
+SECRET_KEY=your_secret_key_here
+api=your_groq_api_key_here
+```
+
+3. **Install Dependencies & Launch FastAPI Server**:
+
+```bash
+python -m venv venv
+
+# On Windows:
+venv\Scripts\activate
+
+# On Linux/macOS:
+source venv/bin/activate
+
+pip install -r requirements.txt
+uvicorn app:app --reload --port 8000
+```
+
+Backend API server will run at `http://127.0.0.1:8000`.
+
+### 3. Setup Frontend
 
 ```bash
 cd frontend
 npm install
-npm start
+npm run dev
 ```
 
-### 3. Setup Backend
-
-```bash
-cd ../backend
-python -m venv venv
-venv\Scripts\activate # on windows
-pip install -r requirements.txt
-uvicorn main:app --reload  # for FastAPI
-```
+Frontend development server will run at `http://localhost:3000`.
 
 ## 🧪 Testing
 
