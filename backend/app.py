@@ -13,7 +13,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from db import Base, engine
 from utils.qdrant_client import setup_qdrant
-from routes import resumes
+from routes import resumes, admin
 from routes.auth import router as auth_router
 from services.search_batch import get_embedder
 
@@ -63,3 +63,4 @@ def read_root():
 
 app.include_router(auth_router, prefix="/auth")
 app.include_router(resumes.router)
+app.include_router(admin.router, prefix="/admin")

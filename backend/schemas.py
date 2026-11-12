@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel, EmailStr, ConfigDict
 
 class SignUpRequest(BaseModel):
@@ -5,6 +6,7 @@ class SignUpRequest(BaseModel):
     email: EmailStr
     number: str
     password: str
+    role: Optional[str] = "recruiter"
 
 class LoginRequest(BaseModel):
     email: EmailStr

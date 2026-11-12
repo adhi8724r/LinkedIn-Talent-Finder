@@ -10,6 +10,7 @@ class User(Base):
     email = Column(String, unique=True, nullable=False)
     number = Column(String)
     password = Column(String, nullable=False)
+    role = Column(String, default="recruiter", nullable=False)  # "admin" or "recruiter"
 
 
 class Resume(Base):
