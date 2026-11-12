@@ -72,7 +72,7 @@ const LoginRegisterPage = () => {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="relative bg-white rounded-lg shadow-2xl overflow-hidden w-[768px] max-w-full min-h-[480px] z-10"
+        className="relative bg-white rounded-lg shadow-2xl overflow-hidden w-[768px] max-w-full min-h-[540px] z-10"
       >
         {/* Sign Up Form */}
         <motion.div
@@ -81,18 +81,19 @@ const LoginRegisterPage = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: isSignUpActive ? 1 : 0 }}
         >
-          <form onSubmit={handleFormSubmit} className="bg-white h-full flex justify-center items-center flex-col px-10 text-center">
-            <h1 className="font-extrabold text-3xl mb-2">Create Account</h1>
-            <p className="text-sm text-gray-500 mb-4">with your HR credentials</p>
-            <input name="name" className="bg-gray-200 border-none p-3 my-1.5 w-full rounded-md text-xs" type="text" placeholder="Name" required />
-            <input name="email" className="bg-gray-200 border-none p-3 my-1.5 w-full rounded-md text-xs" type="email" placeholder="Email" required />
-            <input name="number" className="bg-gray-200 border-none p-3 my-1.5 w-full rounded-md text-xs" type="tel" placeholder="Mobile" required />
-            <input name="password" className="bg-gray-200 border-none p-3 my-1.5 w-full rounded-md text-xs" type="password" placeholder="Password" required />
-            <select name="role" className="bg-gray-200 border-none p-3 my-1.5 w-full rounded-md text-xs font-semibold text-gray-700">
-              <option value="recruiter">Role: Recruiter (HR Sourcing)</option>
+          <form onSubmit={handleFormSubmit} className="bg-white h-full flex justify-center items-center flex-col px-8 text-center py-6">
+            <h1 className="font-extrabold text-2xl mb-1">Create Account</h1>
+            <p className="text-xs text-gray-500 mb-3">Register your HR / Recruiter profile</p>
+            <input name="name" className="bg-gray-100 border border-gray-200 p-2.5 my-1 w-full rounded-lg text-xs focus:ring-1 focus:ring-red-400 focus:outline-none" type="text" placeholder="Full Name" required />
+            <input name="organization" className="bg-gray-100 border border-gray-200 p-2.5 my-1 w-full rounded-lg text-xs focus:ring-1 focus:ring-red-400 focus:outline-none" type="text" placeholder="Organization / Company Name" required />
+            <input name="email" className="bg-gray-100 border border-gray-200 p-2.5 my-1 w-full rounded-lg text-xs focus:ring-1 focus:ring-red-400 focus:outline-none" type="email" placeholder="Work Email" required />
+            <input name="number" className="bg-gray-100 border border-gray-200 p-2.5 my-1 w-full rounded-lg text-xs focus:ring-1 focus:ring-red-400 focus:outline-none" type="tel" placeholder="Mobile Number" required />
+            <input name="password" className="bg-gray-100 border border-gray-200 p-2.5 my-1 w-full rounded-lg text-xs focus:ring-1 focus:ring-red-400 focus:outline-none" type="password" placeholder="Password" required />
+            <select name="role" className="bg-gray-100 border border-gray-200 p-2.5 my-1 w-full rounded-lg text-xs font-semibold text-gray-700 focus:outline-none">
+              <option value="recruiter">Role: Recruiter (HR Talent Sourcing)</option>
               <option value="admin">Role: Admin (Talent Pool & Ingestion)</option>
             </select>
-            <button type="submit" className="mt-3 rounded-full border border-[#FF4B2B] bg-[#FF4B2B] text-white text-xs font-bold py-3 px-12 uppercase tracking-wider transition-transform duration-75 ease-in active:scale-95">
+            <button type="submit" className="mt-3 rounded-full border border-[#FF4B2B] bg-[#FF4B2B] text-white text-xs font-bold py-2.5 px-10 uppercase tracking-wider transition-transform duration-75 ease-in active:scale-95 shadow-md">
               Sign Up
             </button>
           </form>

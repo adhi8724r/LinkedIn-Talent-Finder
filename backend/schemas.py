@@ -6,6 +6,7 @@ class SignUpRequest(BaseModel):
     email: EmailStr
     number: str
     password: str
+    organization: Optional[str] = "Independent"
     role: Optional[str] = "recruiter"
 
 class LoginRequest(BaseModel):

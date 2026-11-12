@@ -39,12 +39,14 @@ def signup(state: SignUpRequest, db: Session = Depends(get_db)):
 
     hashed_pw = bcrypt.hashpw(state.password.encode(), bcrypt.gensalt()).decode()
     role = getattr(state, "role", "recruiter") or "recruiter"
+    organization = (state.organization or "").strip() or "Independent"
 
     new_user = User(
         name=state.name,
         email=state.email,
         number=state.number,
         password=hashed_pw,
+        organization=organization,
         role=role
     )
 
@@ -53,7 +55,13 @@ def signup(state: SignUpRequest, db: Session = Depends(get_db)):
     db.refresh(new_user)
 
     token = create_access_token({"email": state.email, "role": role})
-    return {"message": "Signup successful", "token": token, "role": role, "name": new_user.name}
+    return {
+        "message": "Signup successful",
+        "token": token,
+        "role": role,
+        "name": new_user.name,
+        "organization": new_user.organization
+    }
 
 @router.post("/login")
 def login(state: LoginRequest, db: Session = Depends(get_db)):
@@ -75,6 +83,7 @@ def get_current_user(request: Request, db: Session = Depends(get_db)):
         "name": user.name,
         "email": user.email,
         "number": user.number,
+        "organization": getattr(user, "organization", "Independent") or "Independent",
         "role": user_role
     }
 

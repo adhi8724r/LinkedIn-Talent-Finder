@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import {
   FileText, Search, BarChart3, Briefcase, User, LogOut, ShieldCheck,
-  Clock, X, Mail, Phone, Trash2, ArrowRight, CheckCircle2, Loader2
+  Clock, X, Mail, Phone, Trash2, ArrowRight, CheckCircle2, Loader2, Building2
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import InputPage from "./input";
@@ -478,6 +478,12 @@ const TabLayout = () => {
                     <User className="w-3.5 h-3.5 text-slate-400" /> Full Name:
                   </span>
                   <span className="font-bold text-slate-900">{user?.name || "N/A"}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-500 font-medium flex items-center gap-1.5">
+                    <Building2 className="w-3.5 h-3.5 text-slate-400" /> Organization:
+                  </span>
+                  <span className="font-bold text-slate-900">{user?.organization || "Independent"}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-slate-500 font-medium flex items-center gap-1.5">

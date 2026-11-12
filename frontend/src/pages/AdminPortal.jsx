@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef, useMemo } from "react"
 import {
   UploadCloud, FileText, Database, Activity, CheckCircle2, AlertCircle,
   Trash2, RefreshCw, Search, ShieldCheck, Users, HardDrive, Loader2,
-  FileArchive, ArrowUpRight, Check, X, UserCheck, Mail, Phone, Briefcase
+  FileArchive, ArrowUpRight, Check, X, UserCheck, Mail, Phone, Briefcase, Building2
 } from "lucide-react";
 import axios from "axios";
 import { formatDisplayName } from "../utils/formatters";
@@ -61,6 +61,7 @@ export default function AdminPortal({ onTabChange }) {
     const q = recruiterSearch.toLowerCase().trim();
     return recruiters.filter((r) =>
       (r.name && r.name.toLowerCase().includes(q)) ||
+      (r.organization && r.organization.toLowerCase().includes(q)) ||
       (r.email && r.email.toLowerCase().includes(q)) ||
       (r.number && r.number.toLowerCase().includes(q)) ||
       (r.role && r.role.toLowerCase().includes(q))
@@ -693,6 +694,7 @@ export default function AdminPortal({ onTabChange }) {
               <thead className="bg-slate-50/80 border-b border-slate-200/80 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
                 <tr>
                   <th className="p-4">Recruiter / User</th>
+                  <th className="p-4">Organization</th>
                   <th className="p-4">Email Address</th>
                   <th className="p-4">Mobile Number</th>
                   <th className="p-4">System Role</th>
@@ -703,14 +705,14 @@ export default function AdminPortal({ onTabChange }) {
               <tbody className="divide-y divide-slate-100 font-medium">
                 {loadingRecruiters ? (
                   <tr>
-                    <td colSpan={6} className="p-12 text-center text-slate-400 space-y-2">
+                    <td colSpan={7} className="p-12 text-center text-slate-400 space-y-2">
                       <Loader2 className="w-6 h-6 animate-spin mx-auto text-blue-600" />
                       <p>Loading registered recruiters...</p>
                     </td>
                   </tr>
                 ) : filteredRecruiters.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="p-12 text-center text-slate-400">
+                    <td colSpan={7} className="p-12 text-center text-slate-400">
                       No recruiters match your search filter.
                     </td>
                   </tr>
@@ -727,6 +729,14 @@ export default function AdminPortal({ onTabChange }) {
                             <p className="font-bold text-slate-900 text-xs">{r.name}</p>
                             <p className="text-[10px] text-slate-400 font-normal">Account ID #{r.id}</p>
                           </div>
+                        </div>
+                      </td>
+
+                      {/* Organization */}
+                      <td className="p-4">
+                        <div className="flex items-center space-x-1.5 text-slate-800 font-semibold">
+                          <Building2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                          <span>{r.organization || "Independent"}</span>
                         </div>
                       </td>
 

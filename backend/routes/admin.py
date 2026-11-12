@@ -72,6 +72,7 @@ async def list_registered_recruiters(db: Session = Depends(get_db)):
             "name": u.name,
             "email": u.email,
             "number": u.number or "N/A",
+            "organization": getattr(u, "organization", "Independent") or "Independent",
             "role": getattr(u, "role", "recruiter") or "recruiter",
             "searches_conducted": searches_count
         })
