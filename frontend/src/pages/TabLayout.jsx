@@ -1,23 +1,26 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import {
-  FileText, Search, BarChart3, Briefcase, User, LogOut
+  FileText, Search, BarChart3, Briefcase, User, LogOut, ShieldCheck
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import InputPage from "./input";
 import SearchResults from "./SearchResults";
 import Dashboard from "./dashboard";
+import AdminPortal from "./AdminPortal";
 
 const TabButton = ({ tab, isActive, onClick, badge }) => {
   const getTabStyles = useCallback((color) => ({
     blue: 'border-blue-600 text-blue-700 bg-blue-50/70 shadow-sm',
     purple: 'border-purple-600 text-purple-700 bg-purple-50/70 shadow-sm',
     emerald: 'border-emerald-600 text-emerald-700 bg-emerald-50/70 shadow-sm',
+    rose: 'border-rose-600 text-rose-700 bg-rose-50/70 shadow-sm',
   }[color]), []);
 
   const getIconStyles = useCallback((color) => ({
     blue: 'text-blue-600',
     purple: 'text-purple-600',
     emerald: 'text-emerald-600',
+    rose: 'text-rose-600',
   }[color]), []);
 
   return (
@@ -90,11 +93,19 @@ const TabLayout = () => {
     sessionStorage.setItem("tf_active_tab", activeTab);
   }, [activeTab]);
 
-  const tabs = useMemo(() => [
-    { name: 'Job Description', icon: FileText, color: 'blue' },
-    { name: 'Search Results', icon: Search, color: 'purple' },
-    { name: 'Dashboard', icon: BarChart3, color: 'emerald' }
-  ], []);
+  const isAdmin = user?.role === 'admin' || localStorage.getItem('role') === 'admin';
+
+  const tabs = useMemo(() => {
+    const list = [
+      { name: 'Job Description', icon: FileText, color: 'blue' },
+      { name: 'Search Results', icon: Search, color: 'purple' },
+      { name: 'Dashboard', icon: BarChart3, color: 'emerald' }
+    ];
+    if (isAdmin) {
+      list.push({ name: 'Admin Portal', icon: ShieldCheck, color: 'rose' });
+    }
+    return list;
+  }, [isAdmin]);
 
   // Fetch logged-in user
   useEffect(() => {
@@ -112,6 +123,9 @@ const TabLayout = () => {
         if (res.ok) {
           const data = await res.json();
           setUser(data);
+          if (data.role) {
+            localStorage.setItem("role", data.role);
+          }
         }
       } catch (err) {
         console.error("Auth fetch failed:", err);
@@ -134,6 +148,7 @@ const TabLayout = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
     sessionStorage.removeItem("tf_search_results");
     sessionStorage.removeItem("tf_job_description");
     sessionStorage.removeItem("tf_active_tab");
@@ -234,6 +249,9 @@ const TabLayout = () => {
         )}
         {activeTab === 'Dashboard' && (
           <Dashboard results={searchResults} />
+        )}
+        {activeTab === 'Admin Portal' && (
+          <AdminPortal onTabChange={setActiveTab} />
         )}
       </main>
     </div>

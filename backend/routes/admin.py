@@ -283,3 +283,4 @@ async def upload_resumes_batch(
 
     finally:
         shutil.rmtree(temp_dir, ignore_errors=True)
+

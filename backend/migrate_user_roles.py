@@ -15,3 +15,4 @@ def migrate_users():
 
 if __name__ == "__main__":
     migrate_users()
+

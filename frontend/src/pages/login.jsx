@@ -35,6 +35,9 @@ const LoginRegisterPage = () => {
 
   console.log("🔐 Saving token:", token);
   localStorage.setItem("token", token);
+  if (res.data.role) {
+    localStorage.setItem("role", res.data.role);
+  }
 
   login(token);
   navigate("/app");
