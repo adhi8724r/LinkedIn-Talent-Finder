@@ -92,7 +92,6 @@ const TabLayout = () => {
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
   const [historyList, setHistoryList] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
-  const [updatingRole, setUpdatingRole] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
@@ -121,25 +120,7 @@ const TabLayout = () => {
     }
   }, [isHistoryModalOpen, activeTab, fetchUserHistory]);
 
-  const handleToggleRole = async () => {
-    const newRole = user?.role === "admin" ? "recruiter" : "admin";
-    try {
-      setUpdatingRole(true);
-      const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8000/auth/role?role=${newRole}`, {
-        method: "PATCH",
-        headers: token ? { Authorization: `Bearer ${token}` } : {}
-      });
-      if (res.ok) {
-        setUser((prev) => ({ ...prev, role: newRole }));
-        localStorage.setItem("role", newRole);
-      }
-    } catch (err) {
-      console.error("Failed to toggle role:", err);
-    } finally {
-      setUpdatingRole(false);
-    }
-  };
+
 
   const handleLoadHistorySearch = async (historyId) => {
     try {
@@ -512,36 +493,24 @@ const TabLayout = () => {
                 </div>
               </div>
 
-              {/* Role Switcher Box */}
-              <div className="p-4 rounded-2xl border border-slate-200/80 bg-white space-y-2">
+              {/* Fixed Role Card */}
+              <div className="p-4 rounded-2xl border border-slate-200/80 bg-slate-50/70 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-700">Account Access Level:</span>
                   <span className={`px-2.5 py-1 rounded-lg text-xs font-black uppercase tracking-wider ${
                     user?.role === 'admin' ? 'bg-rose-100 text-rose-700 border border-rose-200' : 'bg-blue-100 text-blue-700 border border-blue-200'
                   }`}>
-                    {user?.role === 'admin' ? '👑 Admin' : '💼 Recruiter'}
+                    {user?.role === 'admin' ? '👑 Administrator' : '💼 Recruiter'}
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-400 leading-relaxed">
+                <p className="text-[11px] text-slate-500 leading-relaxed">
                   {user?.role === 'admin' 
-                    ? 'Admins have full access to bulk resume uploads and the central talent pool directory.' 
-                    : 'Recruiters have access to AI candidate sourcing, matching, and shortlisting.'}
+                    ? 'Administrator account with talent pool ingestion, recruiter oversight, and system management privileges.' 
+                    : 'Recruiter account with talent search, AI semantic ranking, and shortlisting privileges.'}
                 </p>
-                <div className="pt-2">
-                  <button
-                    onClick={handleToggleRole}
-                    disabled={updatingRole}
-                    className="w-full py-2.5 px-3 rounded-xl border border-slate-300 hover:border-slate-400 font-semibold text-xs text-slate-700 hover:bg-slate-50 flex items-center justify-center space-x-1.5 transition-colors disabled:opacity-50"
-                  >
-                    {updatingRole ? (
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    ) : (
-                      <>
-                        <ShieldCheck className="w-3.5 h-3.5 text-purple-600" />
-                        <span>Switch Role to {user?.role === 'admin' ? 'Recruiter' : 'Admin'}</span>
-                      </>
-                    )}
-                  </button>
+                <div className="pt-1 flex items-center space-x-1.5 text-[10px] text-slate-400 font-medium">
+                  <ShieldCheck className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Role is fixed and assigned by system administration.</span>
                 </div>
               </div>
             </div>

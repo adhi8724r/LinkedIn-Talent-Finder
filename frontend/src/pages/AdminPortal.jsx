@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import {
   UploadCloud, FileText, Database, Activity, CheckCircle2, AlertCircle,
   Trash2, RefreshCw, Search, ShieldCheck, Users, HardDrive, Loader2,
-  FileArchive, ArrowUpRight, Check, X
+  FileArchive, ArrowUpRight, Check, X, UserCheck, Mail, Phone, Briefcase
 } from "lucide-react";
 import axios from "axios";
 import { formatDisplayName } from "../utils/formatters";
@@ -29,11 +29,43 @@ export default function AdminPortal({ onTabChange }) {
   // Deletion State
   const [deletingId, setDeletingId] = useState(null);
 
+  // Recruiter Directory State
+  const [activeView, setActiveView] = useState("talents"); // "talents" | "recruiters"
+  const [recruiters, setRecruiters] = useState([]);
+  const [loadingRecruiters, setLoadingRecruiters] = useState(false);
+  const [recruiterSearch, setRecruiterSearch] = useState("");
+
   // Helper for auth headers
   const getAuthHeaders = () => {
     const token = localStorage.getItem("token");
     return token ? { Authorization: `Bearer ${token}` } : {};
   };
+
+  // 1. Fetch Registered Recruiters
+  const fetchRecruiters = useCallback(async () => {
+    try {
+      setLoadingRecruiters(true);
+      const res = await axios.get("http://localhost:8000/admin/recruiters", {
+        headers: getAuthHeaders()
+      });
+      setRecruiters(res.data || []);
+    } catch (err) {
+      console.error("Failed to load registered recruiters:", err);
+    } finally {
+      setLoadingRecruiters(false);
+    }
+  }, []);
+
+  const filteredRecruiters = useMemo(() => {
+    if (!recruiterSearch.trim()) return recruiters;
+    const q = recruiterSearch.toLowerCase().trim();
+    return recruiters.filter((r) =>
+      (r.name && r.name.toLowerCase().includes(q)) ||
+      (r.email && r.email.toLowerCase().includes(q)) ||
+      (r.number && r.number.toLowerCase().includes(q)) ||
+      (r.role && r.role.toLowerCase().includes(q))
+    );
+  }, [recruiters, recruiterSearch]);
 
   // 1. Fetch System Stats
   const fetchStats = useCallback(async () => {
@@ -74,7 +106,8 @@ export default function AdminPortal({ onTabChange }) {
 
   useEffect(() => {
     fetchStats();
-  }, [fetchStats]);
+    fetchRecruiters();
+  }, [fetchStats, fetchRecruiters]);
 
   useEffect(() => {
     fetchCandidates();
@@ -201,13 +234,35 @@ export default function AdminPortal({ onTabChange }) {
       {/* Metrics & System Health Section */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Candidates */}
-        <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex items-center justify-between">
+        <div
+          onClick={() => setActiveView("talents")}
+          className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex items-center justify-between cursor-pointer hover:border-purple-300 transition-colors"
+        >
           <div>
             <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Talent Pool</p>
             <p className="text-2xl font-black text-slate-900 mt-1">
               {loadingStats ? "..." : stats?.total_candidates ?? 0}
             </p>
             <p className="text-[11px] text-slate-500 mt-0.5">PostgreSQL Resumes</p>
+          </div>
+          <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+            <Database className="w-6 h-6" />
+          </div>
+        </div>
+
+        {/* Registered Recruiters */}
+        <div
+          onClick={() => { setActiveView("recruiters"); fetchRecruiters(); }}
+          className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex items-center justify-between cursor-pointer hover:border-blue-300 transition-colors"
+        >
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Registered Recruiters</p>
+            <p className="text-2xl font-black text-blue-600 mt-1">
+              {loadingStats ? "..." : stats?.total_recruiters ?? recruiters.length}
+            </p>
+            <p className="text-[11px] text-blue-500 font-semibold mt-0.5 flex items-center gap-1">
+              View Team Directory →
+            </p>
           </div>
           <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
             <Users className="w-6 h-6" />
@@ -218,27 +273,13 @@ export default function AdminPortal({ onTabChange }) {
         <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex items-center justify-between">
           <div>
             <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Qdrant Vectors</p>
-            <p className="text-2xl font-black text-purple-600 mt-1">
+            <p className="text-2xl font-black text-slate-900 mt-1">
               {loadingStats ? "..." : stats?.qdrant_vectors ?? 0}
             </p>
             <p className="text-[11px] text-slate-500 mt-0.5">768-Dim Embeddings</p>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
-            <Database className="w-6 h-6" />
-          </div>
-        </div>
-
-        {/* Total Searches Run */}
-        <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex items-center justify-between">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Search Activity</p>
-            <p className="text-2xl font-black text-emerald-600 mt-1">
-              {loadingStats ? "..." : stats?.total_searches ?? 0}
-            </p>
-            <p className="text-[11px] text-slate-500 mt-0.5">Historical AI Searches</p>
-          </div>
-          <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-            <Activity className="w-6 h-6" />
+          <div className="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+            <HardDrive className="w-6 h-6" />
           </div>
         </div>
 
@@ -277,6 +318,36 @@ export default function AdminPortal({ onTabChange }) {
         </div>
       </div>
 
+      {/* Admin View Navigation Switcher */}
+      <div className="flex items-center space-x-2 bg-slate-100 p-1.5 rounded-2xl w-fit border border-slate-200/80">
+        <button
+          onClick={() => setActiveView("talents")}
+          className={`flex items-center space-x-2 px-5 py-2.5 rounded-xl font-bold text-xs transition-all ${
+            activeView === "talents"
+              ? "bg-white text-slate-900 shadow-sm"
+              : "text-slate-600 hover:text-slate-900 hover:bg-white/50"
+          }`}
+        >
+          <Database className="w-4 h-4 text-purple-600" />
+          <span>Talent Pool & Ingestion ({totalCandidates})</span>
+        </button>
+
+        <button
+          onClick={() => { setActiveView("recruiters"); fetchRecruiters(); }}
+          className={`flex items-center space-x-2 px-5 py-2.5 rounded-xl font-bold text-xs transition-all ${
+            activeView === "recruiters"
+              ? "bg-white text-slate-900 shadow-sm"
+              : "text-slate-600 hover:text-slate-900 hover:bg-white/50"
+          }`}
+        >
+          <UserCheck className="w-4 h-4 text-blue-600" />
+          <span>Registered Recruiters ({stats?.total_recruiters ?? recruiters.length})</span>
+        </button>
+      </div>
+
+      {/* VIEW 1: TALENT POOL & INGESTION */}
+      {activeView === "talents" && (
+        <div className="space-y-8 animate-in fade-in duration-200">
       {/* Bulk Ingestion Dropzone Card */}
       <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200/80 space-y-6">
         <div>
@@ -576,6 +647,154 @@ export default function AdminPortal({ onTabChange }) {
         </div>
 
       </div>
+        </div>
+      )}
+
+      {/* VIEW 2: REGISTERED RECRUITERS & USER DIRECTORY */}
+      {activeView === "recruiters" && (
+        <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200/80 space-y-6 animate-in fade-in duration-200">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center space-x-2 mb-1">
+                <Users className="w-5 h-5 text-blue-600" />
+                <h2 className="text-lg font-bold text-slate-900">Registered Recruiters & User Directory</h2>
+              </div>
+              <p className="text-xs text-slate-500">
+                All platform recruiter and administrator accounts registered in PostgreSQL. Roles are fixed and managed by administrators.
+              </p>
+            </div>
+
+            <div className="flex items-center space-x-3">
+              {/* Recruiter Search */}
+              <div className="relative">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  placeholder="Filter by name, email, phone..."
+                  value={recruiterSearch}
+                  onChange={(e) => setRecruiterSearch(e.target.value)}
+                  className="pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 w-64"
+                />
+              </div>
+
+              <button
+                onClick={fetchRecruiters}
+                className="p-2 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50 transition-colors"
+                title="Refresh Recruiters"
+              >
+                <RefreshCw className={`w-4 h-4 ${loadingRecruiters ? "animate-spin" : ""}`} />
+              </button>
+            </div>
+          </div>
+
+          {/* Recruiters Table */}
+          <div className="overflow-x-auto rounded-2xl border border-slate-200/80">
+            <table className="w-full text-left text-xs text-slate-700">
+              <thead className="bg-slate-50/80 border-b border-slate-200/80 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                <tr>
+                  <th className="p-4">Recruiter / User</th>
+                  <th className="p-4">Email Address</th>
+                  <th className="p-4">Mobile Number</th>
+                  <th className="p-4">System Role</th>
+                  <th className="p-4 text-center">Talent Searches Executed</th>
+                  <th className="p-4 text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 font-medium">
+                {loadingRecruiters ? (
+                  <tr>
+                    <td colSpan={6} className="p-12 text-center text-slate-400 space-y-2">
+                      <Loader2 className="w-6 h-6 animate-spin mx-auto text-blue-600" />
+                      <p>Loading registered recruiters...</p>
+                    </td>
+                  </tr>
+                ) : filteredRecruiters.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="p-12 text-center text-slate-400">
+                      No recruiters match your search filter.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredRecruiters.map((r) => (
+                    <tr key={r.id} className="hover:bg-slate-50/70 transition-colors">
+                      {/* Recruiter Name & Avatar */}
+                      <td className="p-4">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-500 via-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xs shadow-xs">
+                            {r.name ? r.name[0].toUpperCase() : "U"}
+                          </div>
+                          <div>
+                            <p className="font-bold text-slate-900 text-xs">{r.name}</p>
+                            <p className="text-[10px] text-slate-400 font-normal">Account ID #{r.id}</p>
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Email */}
+                      <td className="p-4">
+                        <div className="flex items-center space-x-1.5 text-slate-700">
+                          <Mail className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                          <span className="font-semibold">{r.email}</span>
+                        </div>
+                      </td>
+
+                      {/* Phone */}
+                      <td className="p-4">
+                        <div className="flex items-center space-x-1.5 text-slate-600">
+                          <Phone className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                          <span>{r.number || "—"}</span>
+                        </div>
+                      </td>
+
+                      {/* Role Badge */}
+                      <td className="p-4">
+                        <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${
+                          r.role === 'admin'
+                            ? 'bg-rose-100 text-rose-700 border border-rose-200'
+                            : 'bg-blue-100 text-blue-700 border border-blue-200'
+                        }`}>
+                          {r.role === 'admin' ? '👑 Admin' : '💼 Recruiter'}
+                        </span>
+                      </td>
+
+                      {/* Search Volume */}
+                      <td className="p-4 text-center">
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200">
+                          {r.searches_conducted} Searches Run
+                        </span>
+                      </td>
+
+                      {/* Status */}
+                      <td className="p-4 text-center">
+                        <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Active
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Footer stats summary */}
+          <div className="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100 gap-2">
+            <span>
+              Showing {filteredRecruiters.length} of {recruiters.length} registered accounts
+            </span>
+            <div className="flex items-center space-x-4">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                Recruiters: <strong>{recruiters.filter(r => r.role === 'recruiter').length}</strong>
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-rose-500"></span>
+                Administrators: <strong>{recruiters.filter(r => r.role === 'admin').length}</strong>
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

@@ -78,12 +78,4 @@ def get_current_user(request: Request, db: Session = Depends(get_db)):
         "role": user_role
     }
 
-@router.patch("/role")
-def update_user_role(role: str, user: User = Depends(get_current_user_model), db: Session = Depends(get_db)):
-    """Allows updating user role between admin and recruiter."""
-    clean_role = role.lower().strip()
-    if clean_role not in ["admin", "recruiter"]:
-        raise HTTPException(status_code=400, detail="Role must be 'admin' or 'recruiter'")
-    user.role = clean_role
-    db.commit()
-    return {"message": f"Role updated to {clean_role}", "role": clean_role}
+

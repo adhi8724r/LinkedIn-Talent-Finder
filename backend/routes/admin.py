@@ -60,6 +60,24 @@ async def get_admin_stats(db: Session = Depends(get_db)):
     }
 
 
+@router.get("/recruiters")
+async def list_registered_recruiters(db: Session = Depends(get_db)):
+    """List all registered recruiters and team members with their search activity."""
+    users = db.query(User).order_by(User.id.asc()).all()
+    result = []
+    for u in users:
+        searches_count = db.query(SearchHistory).filter(SearchHistory.user_email == u.email).count()
+        result.append({
+            "id": u.id,
+            "name": u.name,
+            "email": u.email,
+            "number": u.number or "N/A",
+            "role": getattr(u, "role", "recruiter") or "recruiter",
+            "searches_conducted": searches_count
+        })
+    return result
+
+
 @router.get("/candidates")
 async def list_admin_candidates(
     search: Optional[str] = None,
