@@ -20,7 +20,7 @@ from config import settings
 
 # === CONFIG ===
 QDRANT_COLLECTION = getattr(settings, "qdrant_collection", "resume_vectors")
-GROQ_MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 BATCH_SIZE = 10
 api = settings.api
 

@@ -224,10 +224,10 @@ export default function AdminPortal({ onTabChange }) {
             <span>Admin Control Panel • Role-Based Access</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">
-            Talent Pool Repository & System Health
+            Llama 3.3 Semantic Talent Repository & Health
           </h1>
           <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-            Bulk ingest applicant resume archives (.zip / .docx / .pdf), monitor vector database indexing, and manage central talent records.
+            Bulk ingest applicant resume archives (.zip / .docx / .pdf), monitor Qdrant vector indexing, and oversee Llama 3.3 candidate ranking.
           </p>
         </div>
       </div>
@@ -310,9 +310,9 @@ export default function AdminPortal({ onTabChange }) {
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-600">Groq LLM</span>
+              <span className="text-slate-600">Groq (Llama 3.3 70B)</span>
               <span className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-500" /> Ready
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-500" /> Operational
               </span>
             </div>
           </div>

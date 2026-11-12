@@ -139,9 +139,9 @@ export default function Hero() {
             <div className="text-center md:text-left md:w-full lg:w-1/2 md:pl-6 lg:pl-24">
               <motion.div
                 variants={itemVariants}
-                className="inline-block mb-6 px-6 py-2 rounded-xl text-sm font-semibold bg-white text-blue-600 shadow-md"
+                className="inline-block mb-6 px-6 py-2 rounded-xl text-sm font-semibold bg-white text-purple-700 shadow-md border border-purple-100"
               >
-                AI-Powered Talent Matching
+                ⚡ Powered by Meta Llama 3.3 70B
               </motion.div>
               <motion.h1
                 variants={itemVariants}
@@ -156,7 +156,7 @@ export default function Hero() {
                 variants={itemVariants}
                 className="text-lg text-gray-700 max-w-xl mb-10"
               >
-                Let AI do the heavy lifting in your hiring process. Find the perfect fit faster than ever.
+                Let Llama 3.3 do the heavy lifting in your hiring process. Deep semantic evaluation, objective candidate fit scoring, and instant sourcing.
               </motion.p>
               <motion.div
                 variants={itemVariants}

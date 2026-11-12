@@ -144,6 +144,26 @@ export default function SearchResults({ results = [], onTabChange }) {
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       
+      {/* Llama 3.3 Branding Banner */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+        <div>
+          <div className="flex items-center space-x-2.5">
+            <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">AI Talent Sourcing Results</h2>
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-100 text-purple-700 border border-purple-200">
+              ⚡ Llama 3.3 70B
+            </span>
+          </div>
+          <p className="text-xs text-slate-500 mt-1">
+            Candidates evaluated, objectively matched, and ranked using Meta Llama 3.3 semantic scoring.
+          </p>
+        </div>
+        <div className="flex items-center space-x-2">
+          <span className="text-xs font-bold px-3 py-1.5 rounded-xl bg-purple-50 text-purple-700 border border-purple-200">
+            {results.length} Candidates Scored
+          </span>
+        </div>
+      </div>
+
       {/* Quick Summary KPIs */}
       {stats && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

@@ -79,13 +79,20 @@ export default function Dashboard({ results = [] }) {
     <div className="space-y-8 animate-in fade-in duration-300">
       
       {/* Title */}
-      <div>
-        <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
-          Talent Pool Analytics & Insights
-        </h1>
-        <p className="text-xs text-slate-500 mt-1">
-          Comparative evaluation of the top {results.length} shortlisted candidates
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <div className="flex items-center space-x-2.5">
+            <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+              Talent Pool Analytics & Insights
+            </h1>
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-100 text-purple-700 border border-purple-200">
+              ⚡ Llama 3.3 Analytics
+            </span>
+          </div>
+          <p className="text-xs text-slate-500 mt-1">
+            Comparative evaluation of the top {results.length} shortlisted candidates scored via Meta Llama 3.3
+          </p>
+        </div>
       </div>
 
       {/* KPI Cards */}

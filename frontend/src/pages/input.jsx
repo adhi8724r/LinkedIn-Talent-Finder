@@ -58,7 +58,7 @@ export default function InputPage({ onTabChange, jobDescription, setJobDescripti
   const steps = [
     "Analyzing Job Description & Key Competencies",
     "Querying Vector Embeddings in Qdrant",
-    "Running LLM Semantic Scoring via Groq Llama 3.3"
+    "Running LLM Semantic Scoring via Groq Llama 3.3 70B"
   ];
 
   const fetchHistory = useCallback(async () => {
@@ -170,13 +170,13 @@ export default function InputPage({ onTabChange, jobDescription, setJobDescripti
         <div className="max-w-3xl relative z-10">
           <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-semibold uppercase tracking-wider mb-4">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>AI Talent Discovery Pipeline</span>
+            <span>Powered by Llama 3.3 • 70B AI Engine</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3">
             Source & Rank Top Candidates with Precision
           </h1>
           <p className="text-blue-100 text-sm sm:text-base leading-relaxed">
-            Provide a job description to initiate semantic vector retrieval and automated multi-stage LLM evaluation against candidate profiles.
+            Provide a job description to initiate semantic vector retrieval and automated multi-stage evaluation using Meta Llama 3.3 70B.
           </p>
         </div>
       </div>
@@ -347,7 +347,7 @@ export default function InputPage({ onTabChange, jobDescription, setJobDescripti
             ) : (
               <>
                 <Zap className="w-5 h-5" />
-                <span>Run AI Talent Search</span>
+                <span>Run AI Talent Search (Llama 3.3)</span>
               </>
             )}
           </button>

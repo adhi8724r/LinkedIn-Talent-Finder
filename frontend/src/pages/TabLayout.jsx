@@ -249,8 +249,11 @@ const TabLayout = () => {
                   <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-700 tracking-wide uppercase">
                     AI
                   </span>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-700 border border-purple-200 tracking-wide">
+                    Llama 3.3
+                  </span>
                 </div>
-                <p className="text-[11px] text-slate-500 font-medium">LinkedIn Sourcing & Matching</p>
+                <p className="text-[11px] text-slate-500 font-medium">LinkedIn Sourcing & Matching • Powered by Llama 3.3</p>
               </div>
             </div>
 
