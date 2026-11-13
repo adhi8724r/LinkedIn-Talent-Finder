@@ -7,12 +7,16 @@ import {
   Search,
   UserCircle,
   BarChart3,
+  LayoutDashboard,
+  LogOut,
 } from "lucide-react";
 import { Link as ScrollLink } from "react-scroll";
 import AnimatedBrain from "../assets/AnimatedBrain";
 import GlassBackgroundLayout from "./GlassBackground";
+import { useAuth } from "./AuthContext";
 
 export default function Hero() {
+  const { isAuthenticated, logout } = useAuth();
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -92,18 +96,39 @@ export default function Hero() {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.5 }}
               >
-                <Link
-                  to="/login"
-                  className="px-4 sm:px-6 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded-full transition hover:bg-blue-50"
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/login"
-                  className="px-4 sm:px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full transition hover:brightness-105"
-                >
-                  Sign up
-                </Link>
+                {isAuthenticated ? (
+                  <>
+                    <Link
+                      to="/app"
+                      className="px-4 sm:px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full transition hover:brightness-105 shadow-sm flex items-center gap-1.5"
+                    >
+                      <LayoutDashboard className="w-4 h-4" />
+                      Go to App
+                    </Link>
+                    <button
+                      onClick={logout}
+                      className="px-4 sm:px-6 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-full transition hover:bg-gray-100 flex items-center gap-1.5"
+                    >
+                      <LogOut className="w-4 h-4 text-gray-500" />
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      className="px-4 sm:px-6 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded-full transition hover:bg-blue-50"
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      to="/signup"
+                      className="px-4 sm:px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full transition hover:brightness-105"
+                    >
+                      Sign up
+                    </Link>
+                  </>
+                )}
               </motion.div>
             </div>
           </header>
@@ -163,11 +188,11 @@ export default function Hero() {
                 className="flex justify-center md:justify-start gap-4 flex-wrap"
               >
                 <Link
-                  to="/login"
+                  to={isAuthenticated ? "/app" : "/login"}
                   className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-md hover:scale-105 flex items-center gap-2"
                 >
                   <Briefcase className="h-5 w-5 text-white" />
-                  Start Hiring →
+                  {isAuthenticated ? "Go to App →" : "Start Hiring →"}
                 </Link>
                 <ScrollLink
                   to="features"
@@ -446,10 +471,10 @@ export default function Hero() {
             <div className="md:w-1/3 flex flex-col items-start md:items-end gap-2">
               <p className="text-sm text-gray-600">Built with ❤️ using React + Tailwind</p>
               <Link
-                to="/login"
+                to={isAuthenticated ? "/app" : "/signup"}
                 className="mt-2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-4 py-2 rounded-full text-sm shadow-md hover:brightness-105 transition-all"
               >
-                Get Started →
+                {isAuthenticated ? "Go to App →" : "Get Started →"}
               </Link>
             </div>
           </div>

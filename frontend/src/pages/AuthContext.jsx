@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(localStorage.getItem("token") || null);
+  const [token, setToken] = useState(() => localStorage.getItem("token") || null);
 
   const login = (newToken) => {
     localStorage.setItem("token", newToken);
@@ -12,8 +12,20 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    sessionStorage.removeItem("tf_search_results");
+    sessionStorage.removeItem("tf_job_description");
+    sessionStorage.removeItem("tf_active_tab");
     setToken(null);
   };
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setToken(localStorage.getItem("token") || null);
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
 
   const isAuthenticated = !!token;
 

@@ -4,6 +4,7 @@ import {
   Clock, X, Mail, Phone, Trash2, ArrowRight, CheckCircle2, Loader2, Building2
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 import InputPage from "./input";
 import SearchResults from "./SearchResults";
 import Dashboard from "./dashboard";
@@ -94,6 +95,7 @@ const TabLayout = () => {
   const [loadingHistory, setLoadingHistory] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   // Fetch search history for user
   const fetchUserHistory = useCallback(async () => {
@@ -223,11 +225,7 @@ const TabLayout = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    sessionStorage.removeItem("tf_search_results");
-    sessionStorage.removeItem("tf_job_description");
-    sessionStorage.removeItem("tf_active_tab");
+    logout();
     navigate("/login");
   };
 

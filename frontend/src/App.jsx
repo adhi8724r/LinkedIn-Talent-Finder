@@ -19,7 +19,8 @@ function App() {
       <AuthProvider>
         <Routes>
           <Route path="/" element={<Hero />} />
-          <Route path="/login" element={<LoginRegisterPage />} />
+          <Route path="/login" element={<LoginRegisterPage initialSignUp={false} />} />
+          <Route path="/signup" element={<LoginRegisterPage initialSignUp={true} />} />
 
           <Route
             path="/app"

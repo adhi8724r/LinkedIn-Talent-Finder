@@ -1,16 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from "framer-motion";
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 
-const LoginRegisterPage = () => {
-  const navigate   = useNavigate();
-  const { login }  = useAuth();                // from AuthContext
-  const [isSignUpActive, setIsSignUpActive] = useState(false);
+const LoginRegisterPage = ({ initialSignUp = false }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { login, isAuthenticated } = useAuth(); // from AuthContext
 
-  const handleSignInClick  = () => setIsSignUpActive(false);
-  const handleSignUpClick  = () => setIsSignUpActive(true);
+  if (isAuthenticated) {
+    return <Navigate to="/app" replace />;
+  }
+
+  const checkIsSignUp = useCallback(() => {
+    if (location.pathname === '/signup') return true;
+    if (location.pathname === '/login') {
+      const searchParams = new URLSearchParams(location.search);
+      if (searchParams.get('mode') === 'signup') return true;
+      if (searchParams.get('mode') === 'login' || searchParams.get('mode') === 'signin') return false;
+      if (location.state?.isSignUpActive !== undefined) return Boolean(location.state.isSignUpActive);
+      return false;
+    }
+    return Boolean(initialSignUp);
+  }, [location.pathname, location.search, location.state, initialSignUp]);
+
+  const [isSignUpActive, setIsSignUpActive] = useState(checkIsSignUp);
+
+  useEffect(() => {
+    setIsSignUpActive(checkIsSignUp());
+  }, [checkIsSignUp]);
+
+  const handleSignInClick = () => {
+    setIsSignUpActive(false);
+    if (location.pathname !== '/login') {
+      navigate('/login', { replace: true });
+    }
+  };
+
+  const handleSignUpClick = () => {
+    setIsSignUpActive(true);
+    if (location.pathname !== '/signup') {
+      navigate('/signup', { replace: true });
+    }
+  };
 
   /** -------------------------------------------------
    *  Handle submit for BOTH “Sign In” and “Sign Up”
@@ -76,9 +109,10 @@ const LoginRegisterPage = () => {
       >
         {/* Sign Up Form */}
         <motion.div
-          className={`absolute top-0 h-full transition-all duration-700 ease-in-out left-0 w-1/2 opacity-0 z-[1] ${isSignUpActive ? 'translate-x-full opacity-100 z-[5]' : ''
-            }`}
-          initial={{ opacity: 0 }}
+          className={`absolute top-0 h-full transition-all duration-700 ease-in-out left-0 w-1/2 opacity-0 z-[1] ${
+            isSignUpActive ? 'translate-x-full opacity-100 z-[5] pointer-events-auto' : 'pointer-events-none'
+          }`}
+          initial={false}
           animate={{ opacity: isSignUpActive ? 1 : 0 }}
         >
           <form onSubmit={handleFormSubmit} className="bg-white h-full flex justify-center items-center flex-col px-8 text-center py-6">
@@ -101,8 +135,11 @@ const LoginRegisterPage = () => {
 
         {/* Sign In Form */}
         <motion.div
-          className={`absolute top-0 h-full transition-all duration-700 ease-in-out left-0 w-1/2 z-[2] ${isSignUpActive ? 'translate-x-full' : ''
-            }`}
+          className={`absolute top-0 h-full transition-all duration-700 ease-in-out left-0 w-1/2 z-[2] ${
+            isSignUpActive ? 'translate-x-full opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'
+          }`}
+          initial={false}
+          animate={{ opacity: isSignUpActive ? 0 : 1 }}
         >
           <form onSubmit={handleFormSubmit} className="bg-white h-full flex justify-center items-center flex-col px-10 text-center">
             <h1 className="font-extrabold text-4xl mb-2">Sign in</h1>
@@ -129,7 +166,7 @@ const LoginRegisterPage = () => {
             <motion.div
               className={`absolute top-0 h-full w-1/2 flex justify-center items-center flex-col px-10 text-center transition-transform duration-700 ease-in-out ${isSignUpActive ? 'translate-x-0' : '-translate-x-1/5'
                 }`}
-              initial={{ opacity: 0, x: -20 }}
+              initial={false}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
             >
@@ -144,7 +181,7 @@ const LoginRegisterPage = () => {
             <motion.div
               className={`absolute top-0 h-full w-1/2 flex justify-center items-center flex-col px-10 text-center transition-transform duration-700 ease-in-out right-0 ${isSignUpActive ? 'translate-x-1/5' : 'translate-x-0'
                 }`}
-              initial={{ opacity: 0, x: 20 }}
+              initial={false}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
             >
